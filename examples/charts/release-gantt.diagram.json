@@ -1,0 +1,38 @@
+{
+  "version": 1,
+  "id": "release-plan",
+  "title": "Release plan",
+  "description": "Four project phases.",
+  "type": "gantt",
+  "theme": "dark",
+  "nodes": [],
+  "edges": [],
+  "data": {
+    "tasks": [
+      {
+        "id": "design",
+        "label": "Design",
+        "start": 0,
+        "end": 3
+      },
+      {
+        "id": "build",
+        "label": "Build",
+        "start": 2,
+        "end": 8
+      },
+      {
+        "id": "test",
+        "label": "Test",
+        "start": 7,
+        "end": 10
+      },
+      {
+        "id": "release",
+        "label": "Release",
+        "start": 10,
+        "end": 11
+      }
+    ]
+  }
+}

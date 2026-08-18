@@ -1,0 +1,23 @@
+# Edge semantics
+
+- request: caller to callee
+- response: callee to caller
+- data: generic data movement
+- control: execution/control transfer
+- event: emitted event
+- async: asynchronous message
+- dependency: passive structural relationship
+- feedback: loop back to an earlier stage
+- retry: retry path
+- return: generic return path
+- success: successful conditional branch
+- failure: failed conditional branch
+- conditional: decision branch
+- stream: continuous data stream
+- replication: continuous replication
+- publish: producer to broker
+- subscribe: broker to consumer
+- read: caller toward data source
+- write: caller toward data source
+- trigger: initiator to triggered operation
+- handoff: actor/process handoff

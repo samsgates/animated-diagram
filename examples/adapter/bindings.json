@@ -1,0 +1,15 @@
+{
+  "edges": {
+    "client-api": {
+      "pathId": "client-api-path"
+    }
+  },
+  "nodes": {
+    "client": {
+      "elementId": "client-node"
+    },
+    "api": {
+      "elementId": "api-node"
+    }
+  }
+}

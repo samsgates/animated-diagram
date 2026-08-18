@@ -1,0 +1,51 @@
+{
+  "version": 1,
+  "id": "quality-loop",
+  "title": "Quality feedback loop",
+  "description": "Generate, evaluate, and improve in a feedback cycle.",
+  "type": "loop",
+  "theme": "light",
+  "nodes": [
+    {
+      "id": "generate",
+      "label": "Generate",
+      "type": "process"
+    },
+    {
+      "id": "evaluate",
+      "label": "Evaluate",
+      "type": "process"
+    },
+    {
+      "id": "improve",
+      "label": "Improve",
+      "type": "process"
+    }
+  ],
+  "edges": [
+    {
+      "id": "g-e",
+      "from": "generate",
+      "to": "evaluate",
+      "type": "control",
+      "order": 1
+    },
+    {
+      "id": "e-i",
+      "from": "evaluate",
+      "to": "improve",
+      "type": "control",
+      "order": 2
+    },
+    {
+      "id": "i-g",
+      "from": "improve",
+      "to": "generate",
+      "type": "feedback",
+      "order": 3,
+      "animation": {
+        "continuous": true
+      }
+    }
+  ]
+}

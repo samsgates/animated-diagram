@@ -1,0 +1,11 @@
+{
+  "name": "@animted-diagram/plugins",
+  "version": "1.0.0",
+  "description": "Plugin hook helpers for graph, plan, and HTML transforms.",
+  "type": "module",
+  "main": "./src/index.js",
+  "exports": "./src/index.js",
+  "license": "MIT",
+  "dependencies": {},
+  "types": "./src/index.d.ts"
+}

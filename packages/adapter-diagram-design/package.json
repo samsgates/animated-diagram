@@ -1,0 +1,15 @@
+{
+  "name": "@animted-diagram/adapter-diagram-design",
+  "version": "1.0.0",
+  "description": "Adapter for adding semantic animation to diagram-design HTML/SVG.",
+  "type": "module",
+  "main": "./src/index.js",
+  "exports": "./src/index.js",
+  "license": "MIT",
+  "dependencies": {
+    "@animted-diagram/graph": "1.0.0",
+    "@animted-diagram/planner": "1.0.0",
+    "@animted-diagram/runtime": "1.0.0"
+  },
+  "types": "./src/index.d.ts"
+}

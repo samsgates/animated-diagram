@@ -1,0 +1,24 @@
+{
+  "name": "animted-diagram",
+  "version": "1.0.0",
+  "description": "Logic-aware HTML + SVG animated diagram framework built as a wrapper around diagram-design.",
+  "type": "module",
+  "private": true,
+  "workspaces": ["packages/*"],
+  "bin": {
+    "animated-diagram": "./packages/cli/src/cli.js",
+    "animted-diagram": "./packages/cli/src/cli.js"
+  },
+  "scripts": {
+    "test": "node --test tests/*.test.js",
+    "lint": "node scripts/lint.mjs",
+    "validate:examples": "node scripts/validate-examples.mjs",
+    "check": "npm run lint && npm test && npm run validate:examples",
+    "example:build": "node packages/cli/src/cli.js build examples/architecture/system.diagram.json -o examples/architecture/system.html",
+    "upstream:init": "node scripts/bootstrap-upstream.mjs",
+    "upstream:update": "node scripts/bootstrap-upstream.mjs --update"
+  },
+  "engines": {"node": ">=20"},
+  "keywords": ["svg", "diagram", "animation", "architecture", "flowchart", "sequence-diagram", "semantic-graph"],
+  "license": "MIT"
+}

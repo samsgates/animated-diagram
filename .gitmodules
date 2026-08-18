@@ -1,0 +1,4 @@
+[submodule "upstream/diagram-design"]
+	path = upstream/diagram-design
+	url = https://github.com/cathrynlavery/diagram-design.git
+	branch = main

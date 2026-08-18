@@ -1,0 +1,13 @@
+{
+  "name": "@animted-diagram/planner",
+  "version": "1.0.0",
+  "description": "Logic-aware deterministic animation planner.",
+  "type": "module",
+  "main": "./src/index.js",
+  "exports": "./src/index.js",
+  "license": "MIT",
+  "dependencies": {
+    "@animted-diagram/graph": "1.0.0"
+  },
+  "types": "./src/index.d.ts"
+}

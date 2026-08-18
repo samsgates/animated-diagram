@@ -1,0 +1,78 @@
+{
+  "version": 1,
+  "id": "payment-decision",
+  "title": "Payment decision",
+  "description": "A payment can succeed or fail.",
+  "type": "flowchart",
+  "theme": "light",
+  "nodes": [
+    {
+      "id": "start",
+      "label": "Submit payment",
+      "type": "process"
+    },
+    {
+      "id": "check",
+      "label": "Authorized?",
+      "type": "decision"
+    },
+    {
+      "id": "ship",
+      "label": "Create order",
+      "type": "process"
+    },
+    {
+      "id": "reject",
+      "label": "Reject payment",
+      "type": "output"
+    }
+  ],
+  "edges": [
+    {
+      "id": "start-check",
+      "from": "start",
+      "to": "check",
+      "type": "control",
+      "order": 1
+    },
+    {
+      "id": "yes",
+      "from": "check",
+      "to": "ship",
+      "type": "success",
+      "condition": "yes",
+      "label": "Yes",
+      "order": 2
+    },
+    {
+      "id": "no",
+      "from": "check",
+      "to": "reject",
+      "type": "failure",
+      "condition": "no",
+      "label": "No",
+      "order": 2
+    }
+  ],
+  "scenarios": {
+    "success": {
+      "label": "Successful payment",
+      "edges": [
+        "start-check",
+        "yes"
+      ]
+    },
+    "failure": {
+      "label": "Failed payment",
+      "edges": [
+        "start-check",
+        "no"
+      ]
+    }
+  },
+  "config": {
+    "branch": {
+      "strategy": "interactive"
+    }
+  }
+}

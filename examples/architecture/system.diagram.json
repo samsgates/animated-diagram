@@ -1,0 +1,125 @@
+{
+  "version": 1,
+  "id": "commerce-platform",
+  "title": "Commerce platform request and event flow",
+  "description": "A browser calls the API. Orders reads database and cache in parallel, publishes an event, and returns a response.",
+  "type": "architecture",
+  "theme": "light",
+  "nodes": [
+    {
+      "id": "browser",
+      "label": "Browser",
+      "type": "client"
+    },
+    {
+      "id": "gateway",
+      "label": "API Gateway",
+      "type": "gateway"
+    },
+    {
+      "id": "orders",
+      "label": "Orders Service",
+      "type": "service"
+    },
+    {
+      "id": "db",
+      "label": "PostgreSQL",
+      "type": "database"
+    },
+    {
+      "id": "redis",
+      "label": "Redis",
+      "type": "cache"
+    },
+    {
+      "id": "kafka",
+      "label": "Kafka",
+      "type": "event-bus"
+    },
+    {
+      "id": "worker",
+      "label": "Fulfillment Worker",
+      "type": "worker"
+    }
+  ],
+  "edges": [
+    {
+      "id": "browser-gateway",
+      "from": "browser",
+      "to": "gateway",
+      "type": "request",
+      "label": "POST /orders",
+      "order": 1,
+      "group": "Checkout"
+    },
+    {
+      "id": "gateway-orders",
+      "from": "gateway",
+      "to": "orders",
+      "type": "request",
+      "label": "validated request",
+      "order": 2,
+      "group": "Checkout"
+    },
+    {
+      "id": "orders-db",
+      "from": "orders",
+      "to": "db",
+      "type": "read",
+      "label": "read/write order",
+      "order": 3,
+      "group": "Checkout"
+    },
+    {
+      "id": "orders-redis",
+      "from": "orders",
+      "to": "redis",
+      "type": "read",
+      "label": "cache lookup",
+      "order": 3,
+      "group": "Checkout"
+    },
+    {
+      "id": "orders-kafka",
+      "from": "orders",
+      "to": "kafka",
+      "type": "publish",
+      "label": "OrderCreated",
+      "order": 4,
+      "group": "Events"
+    },
+    {
+      "id": "kafka-worker",
+      "from": "kafka",
+      "to": "worker",
+      "type": "subscribe",
+      "label": "consume",
+      "order": 5,
+      "group": "Events"
+    },
+    {
+      "id": "orders-gateway",
+      "from": "orders",
+      "to": "gateway",
+      "type": "response",
+      "label": "201",
+      "order": 6,
+      "group": "Checkout"
+    },
+    {
+      "id": "gateway-browser",
+      "from": "gateway",
+      "to": "browser",
+      "type": "response",
+      "label": "order id",
+      "order": 7,
+      "group": "Checkout"
+    }
+  ],
+  "config": {
+    "preset": "technical",
+    "sequence": {
+      "parallel": true
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "name": "@animted-diagram/runtime",
+  "version": "1.0.0",
+  "description": "Accessible browser runtime and animation assets.",
+  "type": "module",
+  "main": "./src/index.js",
+  "exports": "./src/index.js",
+  "license": "MIT",
+  "dependencies": {},
+  "types": "./src/index.d.ts"
+}

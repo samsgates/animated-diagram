@@ -1,0 +1,34 @@
+{
+  "version": 1,
+  "id": "latency-bars",
+  "title": "Service latency",
+  "description": "Latency by service.",
+  "type": "bar-chart",
+  "theme": "light",
+  "nodes": [],
+  "edges": [],
+  "data": {
+    "items": [
+      {
+        "id": "gateway",
+        "label": "Gateway",
+        "value": 42
+      },
+      {
+        "id": "orders",
+        "label": "Orders",
+        "value": 81
+      },
+      {
+        "id": "payments",
+        "label": "Payments",
+        "value": 115
+      },
+      {
+        "id": "search",
+        "label": "Search",
+        "value": 63
+      }
+    ]
+  }
+}

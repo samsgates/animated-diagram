@@ -1,0 +1,14 @@
+{
+  "name": "@animted-diagram/svg",
+  "version": "1.0.0",
+  "description": "Built-in SVG renderer and semantic animation overlay compiler.",
+  "type": "module",
+  "main": "./src/index.js",
+  "exports": "./src/index.js",
+  "license": "MIT",
+  "dependencies": {
+    "@animted-diagram/graph": "1.0.0",
+    "@animted-diagram/runtime": "1.0.0"
+  },
+  "types": "./src/index.d.ts"
+}

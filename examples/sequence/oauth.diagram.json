@@ -1,0 +1,75 @@
+{
+  "version": 1,
+  "id": "token-refresh",
+  "title": "Token refresh sequence",
+  "description": "A request fails with 401, refreshes the token, retries, and succeeds.",
+  "type": "sequence",
+  "theme": "dark",
+  "nodes": [
+    {
+      "id": "client",
+      "label": "Client",
+      "type": "client"
+    },
+    {
+      "id": "api",
+      "label": "API",
+      "type": "api"
+    },
+    {
+      "id": "auth",
+      "label": "Auth Service",
+      "type": "service"
+    }
+  ],
+  "edges": [
+    {
+      "id": "call",
+      "from": "client",
+      "to": "api",
+      "type": "request",
+      "label": "GET /profile",
+      "order": 1
+    },
+    {
+      "id": "unauthorized",
+      "from": "api",
+      "to": "client",
+      "type": "response",
+      "label": "401",
+      "order": 2
+    },
+    {
+      "id": "refresh",
+      "from": "client",
+      "to": "auth",
+      "type": "request",
+      "label": "refresh token",
+      "order": 3
+    },
+    {
+      "id": "token",
+      "from": "auth",
+      "to": "client",
+      "type": "response",
+      "label": "new access token",
+      "order": 4
+    },
+    {
+      "id": "retry",
+      "from": "client",
+      "to": "api",
+      "type": "retry",
+      "label": "retry GET",
+      "order": 5
+    },
+    {
+      "id": "success",
+      "from": "api",
+      "to": "client",
+      "type": "response",
+      "label": "200 profile",
+      "order": 6
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "name": "@animted-diagram/cli",
+  "version": "1.0.0",
+  "description": "CLI for animted-diagram",
+  "type": "module",
+  "main": "./src/cli.js",
+  "bin": {
+    "animated-diagram": "./src/cli.js",
+    "animted-diagram": "./src/cli.js"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@animted-diagram/core": "1.0.0",
+    "@animted-diagram/adapter-diagram-design": "1.0.0",
+    "@animted-diagram/importers": "1.0.0"
+  }
+}

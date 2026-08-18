@@ -1,0 +1,16 @@
+{
+  "name": "@animted-diagram/core",
+  "version": "1.0.0",
+  "description": "Public build API for semantic animated diagrams.",
+  "type": "module",
+  "main": "./src/index.js",
+  "exports": "./src/index.js",
+  "license": "MIT",
+  "dependencies": {
+    "@animted-diagram/graph": "1.0.0",
+    "@animted-diagram/planner": "1.0.0",
+    "@animted-diagram/svg": "1.0.0",
+    "@animted-diagram/plugins": "1.0.0"
+  },
+  "types": "./src/index.d.ts"
+}

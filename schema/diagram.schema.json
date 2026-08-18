@@ -1,0 +1,162 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/animted-diagram.schema.json",
+  "title": "Animted Diagram Semantic Graph",
+  "type": "object",
+  "required": [
+    "type",
+    "nodes",
+    "edges"
+  ],
+  "properties": {
+    "version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "type": {
+      "enum": [
+        "architecture",
+        "flowchart",
+        "sequence",
+        "state-machine",
+        "er",
+        "timeline",
+        "swimlane",
+        "quadrant",
+        "nested",
+        "tree",
+        "org-chart",
+        "venn",
+        "layer-stack",
+        "pyramid",
+        "consultant-2x2",
+        "radar",
+        "loop",
+        "it-current-state",
+        "high-level",
+        "bar-chart",
+        "line-chart",
+        "gantt",
+        "scatter-plot",
+        "process",
+        "medallion",
+        "data-flow",
+        "dp-integration",
+        "dp-security-matrix"
+      ]
+    },
+    "theme": {
+      "enum": [
+        "light",
+        "dark"
+      ]
+    },
+    "nodes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "group": {
+            "type": "string"
+          },
+          "position": {
+            "type": "object",
+            "properties": {
+              "x": {
+                "type": "number"
+              },
+              "y": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "x",
+              "y"
+            ]
+          },
+          "metadata": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "edges": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "from",
+          "to"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "from": {
+            "type": "string"
+          },
+          "to": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "order": {
+            "type": "number"
+          },
+          "group": {
+            "type": "string"
+          },
+          "condition": {
+            "type": "string"
+          },
+          "priority": {
+            "type": "number"
+          },
+          "animation": {
+            "type": "object"
+          },
+          "metadata": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "scenarios": {
+      "type": "object"
+    },
+    "data": {
+      "type": "object"
+    },
+    "config": {
+      "type": "object"
+    }
+  },
+  "additionalProperties": true
+}

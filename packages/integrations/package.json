@@ -1,0 +1,13 @@
+{
+  "name": "@animted-diagram/integrations",
+  "version": "1.0.0",
+  "description": "Web Component plus dependency-injected React and Vue wrappers.",
+  "type": "module",
+  "main": "./src/index.js",
+  "exports": "./src/index.js",
+  "license": "MIT",
+  "dependencies": {
+    "@animted-diagram/core": "1.0.0"
+  },
+  "types": "./src/index.d.ts"
+}

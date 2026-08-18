@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "id": "adapter-sample",
+  "title": "Adapter sample",
+  "type": "architecture",
+  "nodes": [
+    {
+      "id": "client",
+      "label": "Client",
+      "type": "client"
+    },
+    {
+      "id": "api",
+      "label": "API",
+      "type": "api"
+    }
+  ],
+  "edges": [
+    {
+      "id": "client-api",
+      "from": "client",
+      "to": "api",
+      "type": "request",
+      "order": 1
+    }
+  ]
+}

@@ -25,6 +25,7 @@ When focus is inside the diagram root:
 - End: final step
 - Space: play or pause
 - R: replay
+- L: loop toggle
 
 Native controls remain available for keyboard users.
 

@@ -12,6 +12,10 @@ The framework is static-first. Every relationship is visible without JavaScript.
 Animation explains flow, sequence, branching, retries, responses, loops, streams,
 and parallel work.
 
+## How it works
+
+![How It Works](media_resources/howitsworks.png)
+
 ## What makes it different
 
 Most SVG animation systems know geometry. They do not know meaning.
@@ -48,7 +52,7 @@ Supported semantic edge types include:
 - Automatic ordering when no order is supplied
 - Scenarios such as success, failure, timeout, and retry
 - Branch strategies: all, success, failure, interactive
-- Play, pause, previous, next, replay, speed controls
+- Play, pause, previous, next, replay, loop mode, speed controls
 - Keyboard controls
 - Reduced-motion and print-safe static output
 - Node relationship highlighting
@@ -528,6 +532,8 @@ For exact upstream visual fidelity, generate the static file with
 `diagram-design`, add stable element IDs, then pass it through the adapter.
 
 ## Architecture
+
+![Architecture Diagram](media_resources/architech_diagram.png)
 
 ```text
 Prompt / JSON / Upstream SVG

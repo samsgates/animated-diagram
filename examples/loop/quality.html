@@ -128,6 +128,17 @@
   min-height: 44px;
   font: inherit;
 }
+.ad-controls label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  user-select: none;
+}
+.ad-controls input[type="checkbox"] {
+  cursor: pointer;
+  accent-color: var(--ad-accent);
+}
 .ad-controls button, .ad-controls select {
   border: 1px solid var(--ad-line);
   border-radius: 10px;
@@ -196,8 +207,9 @@
     <button type="button" data-ad-action="replay">Replay</button>
     <span class="ad-step-readout" data-ad-readout>Step 0 / 3</span>
     <label>Speed <select data-ad-speed><option value=".5">0.5×</option><option value="1" selected>1×</option><option value="1.5">1.5×</option><option value="2">2×</option></select></label>
+    <label><input type="checkbox" checked data-ad-loop-toggle> Loop</label>
     
-  </div><p class="ad-help">Keyboard: ←/→ steps, Home/End, Space play/pause, R replay. Select a node to highlight its relationships.</p>
+  </div><p class="ad-help">Keyboard: ←/→ steps, Home/End, Space play/pause, R replay, L loop toggle. Select a node to highlight its relationships.</p>
     <span class="ad-status" data-ad-status role="status" aria-live="polite" aria-atomic="true"></span>
     <script type="application/json" data-ad-plan>{"version":1,"defaultScenario":"default","plans":{"default":{"version":1,"diagramId":"quality-loop","diagramType":"loop","behavior":"cycle","config":{"mode":"auto","preset":"technical","animation":{"speed":1,"duration":1100,"gap":7,"dotSize":1.8,"easing":"linear","nodePulse":false,"connectorOpacity":1,"style":"dots"},"sequence":{"strategy":"auto","parallel":true,"delay":260,"hold":820},"loop":{"enabled":"auto","pause":500,"iterations":"infinite"},"branch":{"strategy":"branch-all"},"maxSteps":64},"stepCount":3,"steps":[{"step":1,"label":"generate → evaluate","edges":["g-e"],"nodes":["generate","evaluate"],"actions":[{"kind":"flow-edge","edgeId":"g-e","from":"generate","to":"evaluate","edgeType":"control","animation":{"style":"draw","reverse":false,"speed":1,"duration":1100,"gap":7,"dotSize":1.8,"easing":"linear","continuous":false,"iterations":1}}],"delay":260,"hold":820},{"step":2,"label":"evaluate → improve","edges":["e-i"],"nodes":["evaluate","improve"],"actions":[{"kind":"flow-edge","edgeId":"e-i","from":"evaluate","to":"improve","edgeType":"control","animation":{"style":"draw","reverse":false,"speed":1,"duration":1100,"gap":7,"dotSize":1.8,"easing":"linear","continuous":false,"iterations":1}}],"delay":260,"hold":820},{"step":3,"label":"improve → generate","edges":["i-g"],"nodes":["improve","generate"],"actions":[{"kind":"flow-edge","edgeId":"i-g","from":"improve","to":"generate","edgeType":"feedback","animation":{"style":"dots","reverse":false,"speed":1,"duration":1100,"gap":7,"dotSize":1.8,"easing":"linear","continuous":true,"iterations":"infinite"}}],"delay":260,"hold":820}],"loops":[{"edgeId":"i-g","animation":{"style":"dots","reverse":false,"speed":1,"duration":1100,"gap":7,"dotSize":1.8,"easing":"linear","continuous":true,"iterations":"infinite"}}],"nodeFirstStep":{"generate":1,"evaluate":1,"improve":2},"roots":["generate"],"leaves":["improve"],"cycles":[{"nodes":["improve","evaluate","generate"],"edges":["i-g","e-i","g-e"]}],"branches":[],"requestResponsePairs":[],"unreachable":[],"scenario":null}}}</script>
   </main>
@@ -227,6 +239,8 @@
     const controls = [...root.querySelectorAll("[data-ad-action]")];
     const scenarioSelect = root.querySelector("[data-ad-scenario-select]");
     const speedSelect = root.querySelector("[data-ad-speed]");
+    const loopToggle = root.querySelector("[data-ad-loop-toggle], [data-ad-loop-control]");
+    let loopMode = loopToggle ? (loopToggle.type === "checkbox" ? loopToggle.checked : true) : true;
     const edges = () => [...root.querySelectorAll("[data-ad-flow]")];
     const nodes = () => [...root.querySelectorAll("[data-diagram-node]")];
     const marks = () => [...root.querySelectorAll("[data-ad-item-id]")];
@@ -278,6 +292,7 @@
       }
 
       if (readout) readout.textContent = max ? `Step ${Math.min(step, max)} / ${max}` : "Static";
+      if (loopToggle && loopToggle.type === "checkbox") loopToggle.disabled = max === 0 || reduced || staticQuery;
       for (const button of controls) {
         const action = button.dataset.adAction;
         if (action === "prev") button.disabled = step <= 0 || reduced || staticQuery;
@@ -286,6 +301,11 @@
           button.disabled = max === 0 || reduced || staticQuery;
           button.setAttribute("aria-pressed", String(playing));
           button.textContent = playing ? "Pause" : "Play";
+        }
+        if (action === "loop") {
+          button.disabled = max === 0 || reduced || staticQuery;
+          button.setAttribute("aria-pressed", String(loopMode));
+          button.classList.toggle("is-active", loopMode);
         }
       }
       if (announceChange) {
@@ -298,7 +318,22 @@
       stopTimer();
       if (!playing) return;
       const max = Number(plan.stepCount || 0);
-      if (step >= max) { playing = false; render(false); return; }
+      if (step >= max) {
+        if (loopMode && max > 0) {
+          const pauseDelay = Number(plan.config?.loop?.pause ?? 800) / speed;
+          timer = setTimeout(() => {
+            if (!playing) return;
+            step = 1;
+            render(false);
+            schedule();
+          }, Math.max(80, pauseDelay));
+          return;
+        }
+        playing = false;
+        render(false);
+        announce("Animation complete.");
+        return;
+      }
       const current = (plan.steps || []).find(s => s.step === step);
       const hold = Number(current?.hold || plan.config?.sequence?.hold || 820) / speed;
       timer = setTimeout(() => {
@@ -319,6 +354,15 @@
     const replay = () => { pause(); step = 0; render(false); play(); announce("Animation replayed."); };
     const next = () => { pause(); step = Math.min(Number(plan.stepCount || 0), step + 1); render(true); };
     const prev = () => { pause(); step = Math.max(0, step - 1); render(true); };
+    const toggleLoop = nextVal => {
+      loopMode = typeof nextVal === "boolean" ? nextVal : !loopMode;
+      if (loopToggle && loopToggle.type === "checkbox") loopToggle.checked = loopMode;
+      for (const btn of root.querySelectorAll('[data-ad-action="loop"]')) {
+        btn.setAttribute("aria-pressed", String(loopMode));
+        btn.classList.toggle("is-active", loopMode);
+      }
+      announce(loopMode ? "Loop mode enabled." : "Loop mode disabled (play once).");
+    };
 
     root.addEventListener("click", event => {
       const button = event.target.closest("[data-ad-action]");
@@ -328,6 +372,7 @@
         if (action === "replay") replay();
         if (action === "next") next();
         if (action === "prev") prev();
+        if (action === "loop") toggleLoop();
         if (action === "end") { pause(); step = Number(plan.stepCount || 0); render(true); }
         return;
       }
@@ -356,6 +401,7 @@
       if (event.key === "End") { event.preventDefault(); pause(); step = Number(plan.stepCount || 0); render(true); }
       if (event.key === " " && !event.ctrlKey && !event.metaKey && !event.altKey) { event.preventDefault(); play(); }
       if ((event.key === "r" || event.key === "R") && !event.ctrlKey && !event.metaKey && !event.altKey) { event.preventDefault(); replay(); }
+      if ((event.key === "l" || event.key === "L") && !event.ctrlKey && !event.metaKey && !event.altKey) { event.preventDefault(); toggleLoop(); }
       if (event.key === "Enter") {
         const node = event.target.closest?.("[data-diagram-node]");
         if (node) focusNode(node.dataset.diagramNode);
@@ -378,6 +424,10 @@
       speed = Number.isFinite(nextSpeed) && nextSpeed > 0 ? nextSpeed : 1;
       if (playing) schedule();
       announce(`Playback speed ${speed}x.`);
+    });
+
+    loopToggle?.addEventListener("change", () => {
+      toggleLoop(Boolean(loopToggle.checked));
     });
 
     for (const toggle of root.querySelectorAll("[data-ad-group-toggle]")) {

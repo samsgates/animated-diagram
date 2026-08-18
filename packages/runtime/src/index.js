@@ -121,6 +121,17 @@ export const runtimeCSS = String.raw`
   min-height: 44px;
   font: inherit;
 }
+.ad-controls label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  user-select: none;
+}
+.ad-controls input[type="checkbox"] {
+  cursor: pointer;
+  accent-color: var(--ad-accent);
+}
 .ad-controls button, .ad-controls select {
   border: 1px solid var(--ad-line);
   border-radius: 10px;
@@ -179,6 +190,8 @@ function runtimeFactory() {
     const controls = [...root.querySelectorAll("[data-ad-action]")];
     const scenarioSelect = root.querySelector("[data-ad-scenario-select]");
     const speedSelect = root.querySelector("[data-ad-speed]");
+    const loopToggle = root.querySelector("[data-ad-loop-toggle], [data-ad-loop-control]");
+    let loopMode = loopToggle ? (loopToggle.type === "checkbox" ? loopToggle.checked : true) : true;
     const edges = () => [...root.querySelectorAll("[data-ad-flow]")];
     const nodes = () => [...root.querySelectorAll("[data-diagram-node]")];
     const marks = () => [...root.querySelectorAll("[data-ad-item-id]")];
@@ -230,6 +243,7 @@ function runtimeFactory() {
       }
 
       if (readout) readout.textContent = max ? `Step ${Math.min(step, max)} / ${max}` : "Static";
+      if (loopToggle && loopToggle.type === "checkbox") loopToggle.disabled = max === 0 || reduced || staticQuery;
       for (const button of controls) {
         const action = button.dataset.adAction;
         if (action === "prev") button.disabled = step <= 0 || reduced || staticQuery;
@@ -238,6 +252,11 @@ function runtimeFactory() {
           button.disabled = max === 0 || reduced || staticQuery;
           button.setAttribute("aria-pressed", String(playing));
           button.textContent = playing ? "Pause" : "Play";
+        }
+        if (action === "loop") {
+          button.disabled = max === 0 || reduced || staticQuery;
+          button.setAttribute("aria-pressed", String(loopMode));
+          button.classList.toggle("is-active", loopMode);
         }
       }
       if (announceChange) {
@@ -250,7 +269,22 @@ function runtimeFactory() {
       stopTimer();
       if (!playing) return;
       const max = Number(plan.stepCount || 0);
-      if (step >= max) { playing = false; render(false); return; }
+      if (step >= max) {
+        if (loopMode && max > 0) {
+          const pauseDelay = Number(plan.config?.loop?.pause ?? 800) / speed;
+          timer = setTimeout(() => {
+            if (!playing) return;
+            step = 1;
+            render(false);
+            schedule();
+          }, Math.max(80, pauseDelay));
+          return;
+        }
+        playing = false;
+        render(false);
+        announce("Animation complete.");
+        return;
+      }
       const current = (plan.steps || []).find(s => s.step === step);
       const hold = Number(current?.hold || plan.config?.sequence?.hold || 820) / speed;
       timer = setTimeout(() => {
@@ -271,6 +305,15 @@ function runtimeFactory() {
     const replay = () => { pause(); step = 0; render(false); play(); announce("Animation replayed."); };
     const next = () => { pause(); step = Math.min(Number(plan.stepCount || 0), step + 1); render(true); };
     const prev = () => { pause(); step = Math.max(0, step - 1); render(true); };
+    const toggleLoop = nextVal => {
+      loopMode = typeof nextVal === "boolean" ? nextVal : !loopMode;
+      if (loopToggle && loopToggle.type === "checkbox") loopToggle.checked = loopMode;
+      for (const btn of root.querySelectorAll('[data-ad-action="loop"]')) {
+        btn.setAttribute("aria-pressed", String(loopMode));
+        btn.classList.toggle("is-active", loopMode);
+      }
+      announce(loopMode ? "Loop mode enabled." : "Loop mode disabled (play once).");
+    };
 
     root.addEventListener("click", event => {
       const button = event.target.closest("[data-ad-action]");
@@ -280,6 +323,7 @@ function runtimeFactory() {
         if (action === "replay") replay();
         if (action === "next") next();
         if (action === "prev") prev();
+        if (action === "loop") toggleLoop();
         if (action === "end") { pause(); step = Number(plan.stepCount || 0); render(true); }
         return;
       }
@@ -308,6 +352,7 @@ function runtimeFactory() {
       if (event.key === "End") { event.preventDefault(); pause(); step = Number(plan.stepCount || 0); render(true); }
       if (event.key === " " && !event.ctrlKey && !event.metaKey && !event.altKey) { event.preventDefault(); play(); }
       if ((event.key === "r" || event.key === "R") && !event.ctrlKey && !event.metaKey && !event.altKey) { event.preventDefault(); replay(); }
+      if ((event.key === "l" || event.key === "L") && !event.ctrlKey && !event.metaKey && !event.altKey) { event.preventDefault(); toggleLoop(); }
       if (event.key === "Enter") {
         const node = event.target.closest?.("[data-diagram-node]");
         if (node) focusNode(node.dataset.diagramNode);
@@ -330,6 +375,10 @@ function runtimeFactory() {
       speed = Number.isFinite(nextSpeed) && nextSpeed > 0 ? nextSpeed : 1;
       if (playing) schedule();
       announce(`Playback speed ${speed}x.`);
+    });
+
+    loopToggle?.addEventListener("change", () => {
+      toggleLoop(Boolean(loopToggle.checked));
     });
 
     for (const toggle of root.querySelectorAll("[data-ad-group-toggle]")) {

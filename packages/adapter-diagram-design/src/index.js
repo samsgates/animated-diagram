@@ -63,9 +63,10 @@ function adapterControls(graph, bundle) {
     <button type="button" data-ad-action="replay">Replay</button>
     <span class="ad-step-readout" data-ad-readout>Step 0</span>
     <label>Speed <select data-ad-speed><option value=".5">0.5×</option><option value="1" selected>1×</option><option value="1.5">1.5×</option><option value="2">2×</option></select></label>
+    <label><input type="checkbox" checked data-ad-loop-toggle> Loop</label>
     ${select}
   </div>
-  <p class="ad-help">Keyboard: ←/→ steps, Home/End, Space play/pause, R replay.</p>
+  <p class="ad-help">Keyboard: ←/→ steps, Home/End, Space play/pause, R replay, L loop toggle.</p>
   <span class="ad-status" data-ad-status role="status" aria-live="polite" aria-atomic="true"></span>`;
 }
 

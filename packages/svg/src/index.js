@@ -293,8 +293,9 @@ function controls(graph, planBundle) {
     <button type="button" data-ad-action="replay">Replay</button>
     <span class="ad-step-readout" data-ad-readout>Step 0 / ${defaultPlan.stepCount||0}</span>
     <label>Speed <select data-ad-speed><option value=".5">0.5×</option><option value="1" selected>1×</option><option value="1.5">1.5×</option><option value="2">2×</option></select></label>
+    <label><input type="checkbox" checked data-ad-loop-toggle> Loop</label>
     ${scenarioSelect}
-  </div>${groupUI}<p class="ad-help">Keyboard: ←/→ steps, Home/End, Space play/pause, R replay. Select a node to highlight its relationships.</p>`;
+  </div>${groupUI}<p class="ad-help">Keyboard: ←/→ steps, Home/End, Space play/pause, R replay, L loop toggle. Select a node to highlight its relationships.</p>`;
 }
 
 export function renderHtmlDocument(graph, planBundle, options={}) {

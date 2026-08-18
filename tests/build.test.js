@@ -16,6 +16,7 @@ test("builds self-contained accessible HTML", () => {
   assert.match(html,/role="img"/);
   assert.match(html,/<title/);
   assert.match(html,/<desc/);
+  assert.match(html,/data-ad-loop-toggle/);
   assert.match(html,/prefers-reduced-motion/);
   assert.doesNotMatch(html,/<script[^>]+src=/i);
   const report=validateHtml(html);

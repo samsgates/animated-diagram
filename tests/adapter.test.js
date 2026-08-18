@@ -19,6 +19,7 @@ test("decorates upstream path without changing its geometry", () => {
   assert.match(result.html,/<use href="#edge-path"/);
   assert.match(result.html,/d="M0 0 L10 10"/);
   assert.match(result.html,/data-ad-plan/);
+  assert.match(result.html,/data-ad-loop-toggle/);
 });
 
 test("infers exact matching ids", () => {
